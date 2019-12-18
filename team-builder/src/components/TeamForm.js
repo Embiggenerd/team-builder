@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-const TeamForm = props => {
+const TeamForm = ({memberToEdit, formMode, setFormMode, addTeamMember, saveTeamMember}) => {
     const [member, setMember] = useState({
         name: "",
         email: "",
         role: ""
     });
+    
 
     useEffect(()=>{
-        setMember(props.memberEdit)
-    },[props.memberEdit])
+        setMember(memberToEdit)
+    },[memberToEdit])
 
     const handleChanges = e => {
         setMember({
@@ -20,7 +21,13 @@ const TeamForm = props => {
 
     const submitForm = e => {
         e.preventDefault();
-        props.addTeamMember(member);
+        if(formMode === "edit"){
+            saveTeamMember(member)
+            setMember({ name: "", email: "", role: "" });
+            setFormMode('add')
+            return
+        }
+        addTeamMember(member);
         setMember({ name: "", email: "", role: "" });
     };
 
@@ -49,7 +56,7 @@ const TeamForm = props => {
                 onChange={handleChanges}
                 value={member.role}
             />
-            <button type="submit">Add Team Member</button>
+            <button type="submit">{formMode}</button>
         </form>
     );
 };
